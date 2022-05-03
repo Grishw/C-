@@ -4,62 +4,143 @@ using System.Collections.Generic;
 
 namespace ScrumBoard
 {
-    public class Column
+    public class Column : IColumn
     {
-        public string Name { get; set; }
-        public int Order { get; set; }
-        private List<Task> _tasks;
+        public string Name { get; private set; }
+        public int Order { get; private set; }
+        private List<ITask> _tasks;
 
+        public const int TaskMinPriorityValue = 0;
 
-        public Column(string name)
+        public Column(string name, int order)
         {
             Name = name;
-            _tasks = new List<Task>();
+            Order = order;
+            _tasks = new List<ITask>();
         }
 
-        private void UpdateTasksPriorityInRange(int rangeStart, int rangeEnd)
+
+        public void Rename(string name)
+        {
+            Name = name;
+        }
+
+        public void ChengeOrder(int order)
+        {
+            Order = order;
+        }
+
+
+        private void UpdateTasksPriorityInRange(int rangeStart, int rangeEnd, int increaseValue)
         {
             for (int i = rangeStart + 1; i < rangeEnd; i++)
             {
-                _tasks[i].Priority = _tasks[i].Priority + 1;
+                _tasks[i].ChengePriority(_tasks[i].Priority + increaseValue);
             }
         }
 
-        public Boolean AddTask(Task task)
+        public Boolean AddTask(ITask task)
         {
-            if (_tasks == null)
+            if (!_tasks.Any())
             {
-                task.Priority = 0;
+                task.ChengePriority(TaskMinPriorityValue);
                 _tasks.Add(task);
                 return true;
             }
 
             if (task.Priority  >= _tasks.Count)
             {
-                task.Priority = _tasks.Count + 1;
+                task.ChengePriority(_tasks.Count);
             }
 
             switch (task.Priority)
             {
-                case <= 0:
-                    task.Priority = 0;
+                case <= TaskMinPriorityValue:
+                    task.ChengePriority(TaskMinPriorityValue);
                     _tasks.Insert(task.Priority, task);
-                    UpdateTasksPriorityInRange(task.Priority, _tasks.Count);
+                    UpdateTasksPriorityInRange(task.Priority, _tasks.Count, 1);
                     return true;
-                    break;
 
                 default:
                     _tasks.Insert(task.Priority, task);
-                    UpdateTasksPriorityInRange(task.Priority, _tasks.Count);
+                    UpdateTasksPriorityInRange(task.Priority, _tasks.Count, 1);
                     return true;
-                    break;
             }
-
-            return false;
         }
 
-        
+        public Boolean AddTask(string name, string description, int priority)
+        {
+            ITask task = new Task(name: name, description: description, priority: priority);
+            bool result = this.AddTask(task);
+            return result;
+        }
 
+        public Boolean AddTask(string name, string description)
+        {
+            ITask task = new Task(name: name, description: description, priority: _tasks.Count);
+            _tasks.Add(task);
+            return true;
+        }
+
+        public Boolean AddTask(string name)
+        {
+            ITask task = new Task(name: name, description: "common description", priority: _tasks.Count);
+            _tasks.Add(task);
+            return true;
+        }
+
+        public Boolean AddTask()
+        {
+            ITask task = new Task(name: $"task {_tasks.Count}", description: "common description", priority: _tasks.Count);
+            _tasks.Add(task);
+            return true;
+        }
+
+        public List<ITask> GetTaskList()
+        {
+            return _tasks;
+        }
+
+        public ITask GetTask(int priority)
+        {
+            return _tasks.Find(element => element.Priority == priority);
+        }
+
+        public ITask GetTask(string name)
+        {
+            return _tasks.Find(element => element.Name == name);
+        }
+
+        public ITask GetTask(Task task)
+        {
+            return _tasks.Find(element => element.Name == task.Name);
+        }
+
+        public void DeleteTask(ITask task)
+        {
+            int taskToRemovePriority = task.Priority - 1;
+            _tasks.Remove(task);
+            UpdateTasksPriorityInRange(taskToRemovePriority, _tasks.Count, -1);
+        }
+
+        public void MoveTask(ITask taskToMove, int newPrior)
+        {
+            if (newPrior < TaskMinPriorityValue)
+            {
+                newPrior = TaskMinPriorityValue;
+            }
+
+            if (newPrior >= _tasks.Count)
+            {
+                newPrior = _tasks.Count;
+            }
+
+            int orderColumnToMuve = taskToMove.Priority;
+            taskToMove.ChengePriority(newPrior);
+
+            DeleteTask(taskToMove);
+            AddTask(taskToMove);
+        }
 
     }
 }

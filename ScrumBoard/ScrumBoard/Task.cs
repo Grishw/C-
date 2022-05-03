@@ -1,11 +1,11 @@
 ﻿using System;
 namespace ScrumBoard
 {
-    public class Task
+    public class Task : ITask
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public int Priority { get; set; }
+        public string Name { get; private set; }
+        public string Description { get; private set; }
+        public int Priority { get; private set; }
 
         public Task(string name, string description, int priority)
         {
@@ -13,5 +13,21 @@ namespace ScrumBoard
             Description = description;
             Priority = priority;
         }
+
+        public void Rename(string name)
+        {
+            Name = name;
+        }
+
+        public void ChengeDescription(string description)
+        {
+            Description = description;
+        }
+
+        public void ChengePriority(int priority)
+        {
+            Priority = priority;
+        }
+
     }
 }
