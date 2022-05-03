@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ScrumBoard
 {
-    public class ScrumBoard
+    public class ScrumBoard : IScrumBoard
     {
         private const int MaxColumnsCount = 10;
         private const int ColumnMinOrderValue = 0;
