@@ -8,7 +8,8 @@ namespace ScrumBoard
         int Priority { get;}
 
         void Rename(string name);
-        void ChengeDescription(string description);
-        void ChengePriority(int priority);
+        void ChangeDescription(string description);
+        void ChangePriority(int priority);
+        object Clone();
     }
 }

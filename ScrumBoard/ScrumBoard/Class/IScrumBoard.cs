@@ -17,6 +17,6 @@ namespace ScrumBoard
         void MoveColumn(IColumn columnToMove, int newOrder);
         void AddTask(ITask task);
         void MoveTaskOverColumn(ITask taskToMove, int newPrior, IColumn columnTo, IColumn columnFrom);
-
+        object Clone();
     }
 }

@@ -19,14 +19,19 @@ namespace ScrumBoard
             Name = name;
         }
 
-        public void ChengeDescription(string description)
+        public void ChangeDescription(string description)
         {
             Description = description;
         }
 
-        public void ChengePriority(int priority)
+        public void ChangePriority(int priority)
         {
             Priority = priority;
+        }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
         }
 
     }

@@ -25,7 +25,7 @@ namespace ScrumBoard
             Name = name;
         }
 
-        public void ChengeOrder(int order)
+        public void ChangeOrder(int order)
         {
             Order = order;
         }
@@ -35,28 +35,29 @@ namespace ScrumBoard
         {
             for (int i = rangeStart + 1; i < rangeEnd; i++)
             {
-                _tasks[i].ChengePriority(_tasks[i].Priority + increaseValue);
+                _tasks[i].ChangePriority(_tasks[i].Priority + increaseValue);
             }
         }
 
-        public Boolean AddTask(ITask task)
+        public Boolean AddTask(ITask inTask)
         {
+            ITask task = (Task)inTask.Clone();
             if (!_tasks.Any())
             {
-                task.ChengePriority(TaskMinPriorityValue);
+                task.ChangePriority(TaskMinPriorityValue);
                 _tasks.Add(task);
                 return true;
             }
 
             if (task.Priority  >= _tasks.Count)
             {
-                task.ChengePriority(_tasks.Count);
+                task.ChangePriority(_tasks.Count);
             }
 
             switch (task.Priority)
             {
                 case <= TaskMinPriorityValue:
-                    task.ChengePriority(TaskMinPriorityValue);
+                    task.ChangePriority(TaskMinPriorityValue);
                     _tasks.Insert(task.Priority, task);
                     UpdateTasksPriorityInRange(task.Priority, _tasks.Count, 1);
                     return true;
@@ -136,10 +137,15 @@ namespace ScrumBoard
             }
 
             int orderColumnToMuve = taskToMove.Priority;
-            taskToMove.ChengePriority(newPrior);
+            taskToMove.ChangePriority(newPrior);
 
             DeleteTask(taskToMove);
             AddTask(taskToMove);
+        }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
         }
 
     }

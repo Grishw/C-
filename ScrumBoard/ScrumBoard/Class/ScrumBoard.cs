@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,13 +31,14 @@ namespace ScrumBoard
         {
             for (int i = rangeStart + 1; i < rangeEnd; i++)
             {
-                _columns[i].ChengeOrder(_columns[i].Order + increaseValue);
+                _columns[i].ChangeOrder(_columns[i].Order + increaseValue);
             }
         }
 
 
-        public bool AddColumn(IColumn column)
+        public bool AddColumn(IColumn inColumn)
         {
+            IColumn column = (IColumn)inColumn.Clone();
             if (_columns.Count> MaxColumnsCount)
             {
                 return false;
@@ -42,7 +46,7 @@ namespace ScrumBoard
 
             if (column.Order > _columns.Count)
             {
-                column.ChengeOrder(_columns.Count);
+                column.ChangeOrder(_columns.Count);
                 _columns.Add(column);
                 return true;
             }
@@ -50,7 +54,7 @@ namespace ScrumBoard
             switch (column.Order)
             {
                 case <= ColumnMinOrderValue:
-                    column.ChengeOrder(ColumnMinOrderValue);
+                    column.ChangeOrder(ColumnMinOrderValue);
                     _columns.Insert(column.Order, column);
                     UpdateColumnsPriorityInRange(column.Order, _columns.Count, 1);
                     return true;
@@ -115,7 +119,7 @@ namespace ScrumBoard
             }
 
             int orderColumnToMuve = columnToMove.Order;
-            columnToMove.ChengeOrder(newOrder);
+            columnToMove.ChangeOrder(newOrder);
 
              DeleteColumn(columnToMove);
              AddColumn(columnToMove);
@@ -137,6 +141,9 @@ namespace ScrumBoard
             columnTo.AddTask(taskToMove.Name, taskToMove.Description, newPrior);
         }
 
-
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace ScrumBoard
         int Order { get;}
 
         void Rename(string name);
-        void ChengeOrder(int order);
+        void ChangeOrder(int order);
         Boolean AddTask(ITask task);
         Boolean AddTask(string name, string description, int priority);
         Boolean AddTask(string name, string description);
@@ -21,6 +21,6 @@ namespace ScrumBoard
         ITask GetTask(Task task);
         void DeleteTask(ITask task);
         void MoveTask(ITask taskToMove, int newPrior);
-
+        object Clone();
     }
 }
