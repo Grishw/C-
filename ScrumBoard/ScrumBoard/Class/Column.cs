@@ -39,6 +39,11 @@ namespace ScrumBoard
             }
         }
 
+        private List<ITask> GetListClone(List<ITask> taskList)
+        {
+            return taskList.Select(elenemt => (ITask)elenemt.Clone()).ToList();
+        }
+
         public Boolean AddTask(ITask inTask)
         {
             ITask task = (Task)inTask.Clone();
@@ -99,22 +104,22 @@ namespace ScrumBoard
 
         public List<ITask> GetTaskList()
         {
-            return _tasks;
+            return GetListClone(_tasks);
         }
 
         public ITask GetTask(int priority)
         {
-            return _tasks.Find(element => element.Priority == priority);
+            return (Task)_tasks.Find(element => element.Priority == priority).Clone();
         }
 
         public ITask GetTask(string name)
         {
-            return _tasks.Find(element => element.Name == name);
+            return (Task)_tasks.Find(element => element.Name == name).Clone();
         }
 
         public ITask GetTask(Task task)
         {
-            return _tasks.Find(element => element.Name == task.Name);
+            return (Task)_tasks.Find(element => element.Name == task.Name).Clone();
         }
 
         public void DeleteTask(ITask task)
@@ -146,6 +151,11 @@ namespace ScrumBoard
         public object Clone()
         {
             return MemberwiseClone();
+        }
+
+        public void Clear()
+        {
+            _tasks.Clear();
         }
 
     }

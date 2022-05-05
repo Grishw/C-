@@ -22,5 +22,6 @@ namespace ScrumBoard
         void DeleteTask(ITask task);
         void MoveTask(ITask taskToMove, int newPrior);
         object Clone();
+        void Clear();
     }
 }

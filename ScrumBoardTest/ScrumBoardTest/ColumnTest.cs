@@ -92,5 +92,99 @@ namespace ScrumBoardTest
             Assert.True(taskListFromColumn[0].Priority == taskPriorityWaited);
         }
 
+        [Fact]
+        public void Add_one_task_to_column_like_name_description()
+        {
+            const string taskName = "test name";
+            const string taskDescription = "test description";
+            const int taskPriorityWaited = 0;
+            IColumn column = new Column("test name", 999999);
+
+            column.AddTask(taskName, taskDescription);
+            List<ITask> taskListFromColumn = column.GetTaskList();
+
+            Assert.True(taskListFromColumn.Any() != false);
+            Assert.True(taskListFromColumn.Count == 1);
+
+            Assert.True(taskListFromColumn[0].Name == taskName);
+            Assert.True(taskListFromColumn[0].Description == taskDescription);
+            Assert.True(taskListFromColumn[0].Priority == taskPriorityWaited);
+        }
+
+        [Fact]
+        public void Add_one_task_to_column_like_name()
+        {
+            const string taskName = "test name";
+            const string taskDescriptionWaited = "common description";
+            const int taskPriorityWaited = 0;
+            IColumn column = new Column("test name", 999999);
+
+            column.AddTask(taskName);
+            List<ITask> taskListFromColumn = column.GetTaskList();
+
+            Assert.True(taskListFromColumn.Any() != false);
+            Assert.True(taskListFromColumn.Count == 1);
+
+            Assert.True(taskListFromColumn[0].Name == taskName);
+            Assert.True(taskListFromColumn[0].Description == taskDescriptionWaited);
+            Assert.True(taskListFromColumn[0].Priority == taskPriorityWaited);
+        }
+
+        [Fact]
+        public void Add_one_task_to_column_like_standart_add()
+        {
+            const string taskNameWaited = "task 0";
+            const string taskDescriptionWaited = "common description";
+            const int taskPriorityWaited = 0;
+            IColumn column = new Column("test name", 999999);
+
+            column.AddTask();
+            List<ITask> taskListFromColumn = column.GetTaskList();
+
+            Assert.True(taskListFromColumn.Any() != false);
+            Assert.True(taskListFromColumn.Count == 1);
+
+            Assert.True(taskListFromColumn[0].Name == taskNameWaited);
+            Assert.True(taskListFromColumn[0].Description == taskDescriptionWaited);
+            Assert.True(taskListFromColumn[0].Priority == taskPriorityWaited);
+        }
+
+        [Fact]
+        public void Get_task_list_from_column()
+        {
+            IColumn column = new Column("test name", 999999);
+            ITask task = new Task("test name", "test description", 999999);
+            List<ITask> taskListFromColumnWaited = new List<ITask>();
+            taskListFromColumnWaited.Add(new Task("test name", "test description", 0));
+            column.AddTask(task);
+
+            List<ITask> taskListFromColumn = column.GetTaskList();
+
+            Assert.True(taskListFromColumn.Count == taskListFromColumnWaited.Count);
+            Assert.True(taskListFromColumn[0].Name == taskListFromColumnWaited[0].Name);
+            Assert.True(taskListFromColumn[0].Description == taskListFromColumnWaited[0].Description);
+            Assert.True(taskListFromColumn[0].Priority == taskListFromColumnWaited[0].Priority);
+        }
+
+        [Fact]
+        public void Check_the_task_data_mutation_in_column_list()
+        {
+            IColumn column = new Column("test name", 999999);
+            ITask task = new Task("test name", "test description", 999999);
+            List<ITask> taskListFromColumnWaited = new List<ITask>();
+            taskListFromColumnWaited.Add(new Task("test name", "test description", 0));
+            column.AddTask(task);
+            const int newPriority = 120000;
+
+            List<ITask> taskListFromColumn = column.GetTaskList();
+            taskListFromColumn[0].ChangePriority(newPriority);
+
+            Assert.True(column.GetTaskList().Count == taskListFromColumnWaited.Count);
+            Assert.True(column.GetTaskList()[0].Name == taskListFromColumnWaited[0].Name);
+            Assert.True(column.GetTaskList()[0].Description == taskListFromColumnWaited[0].Description);
+            Assert.True(column.GetTaskList()[0].Priority == taskListFromColumnWaited[0].Priority);
+
+        }
+
     }
 }
