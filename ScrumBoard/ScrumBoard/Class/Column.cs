@@ -46,32 +46,41 @@ namespace ScrumBoard
 
         public Boolean AddTask(ITask inTask)
         {
-            ITask task = (Task)inTask.Clone();
-            if (!_tasks.Any())
+            if (inTask != null)
             {
-                task.ChangePriority(TaskMinPriorityValue);
-                _tasks.Add(task);
-                return true;
-            }
+                ITask task = (Task)inTask.Clone();
 
-            if (task.Priority  >= _tasks.Count)
-            {
-                task.ChangePriority(_tasks.Count);
-            }
-
-            switch (task.Priority)
-            {
-                case <= TaskMinPriorityValue:
+                if (!_tasks.Any())
+                {
                     task.ChangePriority(TaskMinPriorityValue);
-                    _tasks.Insert(task.Priority, task);
-                    UpdateTasksPriorityInRange(task.Priority, _tasks.Count, 1);
+                    _tasks.Add(task);
                     return true;
+                }
 
-                default:
-                    _tasks.Insert(task.Priority, task);
-                    UpdateTasksPriorityInRange(task.Priority, _tasks.Count, 1);
-                    return true;
+                if (task.Priority >= _tasks.Count)
+                {
+                    task.ChangePriority(_tasks.Count);
+                }
+
+                switch (task.Priority)
+                {
+                    case <= TaskMinPriorityValue:
+                        task.ChangePriority(TaskMinPriorityValue);
+                        _tasks.Insert(task.Priority, task);
+                        UpdateTasksPriorityInRange(task.Priority, _tasks.Count, 1);
+                        return true;
+
+                    default:
+                        _tasks.Insert(task.Priority, task);
+                        UpdateTasksPriorityInRange(task.Priority, _tasks.Count, 1);
+                        return true;
+                }
             }
+            else
+            {
+                return AddTask();
+            }
+            
         }
 
         public Boolean AddTask(string name, string description, int priority)
@@ -123,20 +132,33 @@ namespace ScrumBoard
 
         public ITask GetTask(ITask task)
         {
-            return _tasks.Find(element => (element.Name == task.Name && element.Priority == task.Priority && element.Description == task.Description)) != null
+            if(task != null)
+            {
+                return _tasks.Find(element => (element.Name == task.Name && element.Description == task.Description)) != null
                 ? (Task)_tasks.Find(element => element.Name == task.Name).Clone()
                 : null;
+            }
+            else
+            {
+                return null;
+            }
+            
         }
 
         public void DeleteTask(ITask task)
         {
-            int taskToRemovePriority = task.Priority - 1;
-            _tasks.RemoveAll(element => (element.Name == task.Name && element.Priority == task.Priority && element.Description == task.Description));
-            UpdateTasksPriorityInRange(taskToRemovePriority, _tasks.Count, -1);
+            if(GetTask(task) != null)
+            {
+                int taskToRemovePriority = task.Priority - 1;
+                _tasks.RemoveAll(element => (element.Name == task.Name && element.Priority == task.Priority && element.Description == task.Description));
+                UpdateTasksPriorityInRange(taskToRemovePriority, _tasks.Count, -1);
+            }
         }
 
-        public void MoveTask(ITask taskToMove, int newPrior)
+        public void MoveTask(ITask inTaskToMove, int newPrior)
         {
+            ITask taskToMove = GetTask(inTaskToMove);
+
             if (newPrior < TaskMinPriorityValue)
             {
                 newPrior = TaskMinPriorityValue;
@@ -146,12 +168,13 @@ namespace ScrumBoard
             {
                 newPrior = _tasks.Count;
             }
-
-            int orderColumnToMuve = taskToMove.Priority;
-            taskToMove.ChangePriority(newPrior);
-
-            DeleteTask(taskToMove);
-            AddTask(taskToMove);
+            
+            if (taskToMove != null)
+            {
+                DeleteTask(taskToMove);
+                taskToMove.ChangePriority(newPrior);
+                AddTask(taskToMove);
+            }
         }
 
         public object Clone()

@@ -53,22 +53,27 @@ namespace ScrumBoardTest
         }
 
         [Fact]
-        public void Add_one_task_to_column_like_task()
+        public void Add_task_to_column_like_task()
         {
-            ITask task = new Task("test name", "test description", 999999);
+            ITask task_1 = new Task("test name", "test description", 999999);
+            ITask task_2 = null;
             IColumn column = new Column("test name", 999999);
-            const int taskPriorityFromList = 0;
+            const int task_1_PriorityFromList = 0;
 
-            column.AddTask(task);
+            column.AddTask(task_1);
+            column.AddTask(task_2);
             List<ITask> taskListFromColumn = column.GetTaskList();
 
             Assert.True(taskListFromColumn.Any() != false);
-            Assert.True(taskListFromColumn.Count == 1);
+            Assert.True(taskListFromColumn.Count == 2);
 
-            Assert.True(taskListFromColumn[0].Name == task.Name);
-            Assert.True(taskListFromColumn[0].Description == task.Description);
-            Assert.True(taskListFromColumn[0].Priority != task.Priority);
-            Assert.True(taskListFromColumn[0].Priority == taskPriorityFromList);
+            Assert.True(taskListFromColumn[0].Name == task_1.Name);
+            Assert.True(taskListFromColumn[0].Description == task_1.Description);
+            Assert.True(taskListFromColumn[0].Priority != task_1.Priority);
+            Assert.True(taskListFromColumn[0].Priority == task_1_PriorityFromList);
+            Assert.True(taskListFromColumn[1].Name == "task 1");
+            Assert.True(taskListFromColumn[1].Description == "common description");
+            Assert.True(taskListFromColumn[1].Priority == 1);
         }
 
         [Fact]
@@ -230,16 +235,17 @@ namespace ScrumBoardTest
             ITask task = new Task("test name", "test description", 9999999);
             column.AddTask(task);
             ITask taskForGet_1 = new Task("test name", "test description", 0);
-            ITask taskForGet_2 = (Task)task.Clone();
-            
+            ITask taskForGet_2 = new Task("test name", "test description", 99999);
+            ITask taskForGet_3 = new Task("test name 1", "test description", 0);
 
             ITask taskGettedFromColumn_1 = column.GetTask(taskForGet_1);
-
             Assert.NotNull(taskGettedFromColumn_1);
 
             ITask taskGettedFromColumn_2 = column.GetTask(taskForGet_2);
+            Assert.NotNull(taskGettedFromColumn_2);
 
-            Assert.True(taskGettedFromColumn_2 == null);
+            ITask taskGettedFromColumn_3 = column.GetTask(taskForGet_3);
+            Assert.True(taskGettedFromColumn_3 == null);
         }
 
         [Fact]
@@ -269,6 +275,99 @@ namespace ScrumBoardTest
             column.DeleteTask(task);
 
             Assert.True(column.GetTaskList().Any() == false);
+        }
+
+        [Fact]
+        public void Add_some_task_to_column()
+        {
+            ITask task_1 = new Task("test name 1", "test description", 0);
+            ITask task_2 = new Task("test name 2", "test description", 2);
+            ITask task_3 = new Task("test name 3", "test description", 0);
+            IColumn column = new Column("test name", 999999);
+            column.AddTask(task_1);
+            column.AddTask(task_2);
+            column.AddTask(task_3);
+
+            List<ITask> taskListFromColumn = column.GetTaskList();
+
+            Assert.True(taskListFromColumn.Any() != false);
+            Assert.True(taskListFromColumn.Count == 3);
+
+            Assert.True(column.GetTask(task_1.Name).Priority == 1);
+            Assert.True(column.GetTask(task_2.Name).Priority == 2);
+            Assert.True(column.GetTask(task_3.Name).Priority == 0);
+        }
+
+        [Fact]
+        public void Delete_task_from_column()
+        {
+            ITask task_1 = new Task("test name 1", "test description", 0);
+            ITask task_2 = new Task("test name 2", "test description", 2);
+            ITask task_3 = new Task("test name 3", "test description", 0);
+            IColumn column = new Column("test name", 999999);
+            column.AddTask(task_1);
+            column.AddTask(task_2);
+            column.AddTask(task_3);
+
+            column.DeleteTask(column.GetTask(task_1));
+            List<ITask> taskListFromColumn = column.GetTaskList();
+
+            Assert.True(taskListFromColumn.Any() != false);
+            Assert.True(taskListFromColumn.Count == 2);
+
+            Assert.True(column.GetTask(task_1.Name) == null);
+            Assert.True(column.GetTask(task_2.Name).Priority == 1);
+            Assert.True(column.GetTask(task_3.Name).Priority == 0);
+
+
+            column.DeleteTask(column.GetTask(task_1));
+            taskListFromColumn = column.GetTaskList();
+
+            Assert.True(taskListFromColumn.Any() != false);
+            Assert.True(taskListFromColumn.Count == 2);
+
+            Assert.True(column.GetTask(task_1.Name) == null);
+            Assert.True(column.GetTask(task_2.Name).Priority == 1);
+            Assert.True(column.GetTask(task_3.Name).Priority == 0);
+        }
+
+        [Fact]
+        public void Move_task()
+        {
+            ITask task_1 = new Task("test name 1", "test description", 0);
+            ITask task_2 = new Task("test name 2", "test description", 2);
+            ITask task_3 = new Task("test name 3", "test description", 0);
+            IColumn column = new Column("test name", 999999);
+            column.AddTask(task_1);
+            column.AddTask(task_2);
+            column.AddTask(task_3);
+
+            column.MoveTask(column.GetTask(task_1), 5);
+            List<ITask> taskListFromColumn = column.GetTaskList();
+
+            Assert.True(taskListFromColumn.Any() != false);
+            Assert.True(taskListFromColumn.Count == 3);
+
+            Assert.True(column.GetTask(task_1.Name).Priority == 2);
+            Assert.True(column.GetTask(task_2.Name).Priority == 1);
+            Assert.True(column.GetTask(task_3.Name).Priority == 0);
+        }
+
+        [Fact]
+        public void Clear_column_task()
+        {
+            ITask task_1 = new Task("test name 1", "test description", 0);
+            ITask task_2 = new Task("test name 2", "test description", 2);
+            ITask task_3 = new Task("test name 3", "test description", 0);
+            IColumn column = new Column("test name", 999999);
+            column.AddTask(task_1);
+            column.AddTask(task_2);
+            column.AddTask(task_3);
+
+            column.Clear();
+            List<ITask> taskListFromColumn = column.GetTaskList();
+
+            Assert.True(taskListFromColumn.Any() == false);
         }
 
     }
