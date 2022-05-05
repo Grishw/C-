@@ -131,7 +131,7 @@ namespace ScrumBoard
         public void DeleteTask(ITask task)
         {
             int taskToRemovePriority = task.Priority - 1;
-            _tasks.Remove(task);
+            _tasks.RemoveAll(element => (element.Name == task.Name && element.Priority == task.Priority && element.Description == task.Description));
             UpdateTasksPriorityInRange(taskToRemovePriority, _tasks.Count, -1);
         }
 

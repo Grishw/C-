@@ -268,7 +268,6 @@ namespace ScrumBoardTest
 
             column.DeleteTask(task);
 
-
             Assert.True(column.GetTaskList().Any() == false);
         }
 
