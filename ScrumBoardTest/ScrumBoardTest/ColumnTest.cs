@@ -167,7 +167,7 @@ namespace ScrumBoardTest
         }
 
         [Fact]
-        public void Check_the_task_data_mutation_in_column_list()
+        public void Check_the_task_data_mutation_by_getted_column_list()
         {
             IColumn column = new Column("test name", 999999);
             ITask task = new Task("test name", "test description", 999999);
@@ -223,6 +223,7 @@ namespace ScrumBoardTest
             Assert.True(taskGettedFromColumn_2 == null);
         }
 
+        [Fact]
         public void Get_task_from_column_by_task()
         {
             IColumn column = new Column("test name", 999999);
@@ -239,6 +240,36 @@ namespace ScrumBoardTest
             ITask taskGettedFromColumn_2 = column.GetTask(taskForGet_2);
 
             Assert.True(taskGettedFromColumn_2 == null);
+        }
+
+        [Fact]
+        public void Check_the_task_data_mutation_by_getted_task()
+        {
+            IColumn column = new Column("test name", 999999);
+            column.AddTask(new Task("test name", "test description", 9999999));
+            const int taskPriorityForGet_1 = 0;
+
+            ITask taskGettedFromColumn_1 = column.GetTask(taskPriorityForGet_1);
+            taskGettedFromColumn_1.ChangePriority(9999999);
+            ITask taskFromColumnAfterChangeGettedEarlierTask = column.GetTask(taskPriorityForGet_1);
+
+            Assert.True(taskGettedFromColumn_1 != taskFromColumnAfterChangeGettedEarlierTask);
+            Assert.True(taskGettedFromColumn_1.Name == taskFromColumnAfterChangeGettedEarlierTask.Name);
+            Assert.True(taskGettedFromColumn_1.Description == taskFromColumnAfterChangeGettedEarlierTask.Description);
+            Assert.True(taskGettedFromColumn_1.Priority != taskFromColumnAfterChangeGettedEarlierTask.Priority);
+        }
+
+        [Fact]
+        public void Delete_task()
+        {
+            IColumn column = new Column("test name", 999999);
+            ITask task = new Task("test name", "test description", 0);
+            column.AddTask(task);
+
+            column.DeleteTask(task);
+
+
+            Assert.True(column.GetTaskList().Any() == false);
         }
 
     }

@@ -109,17 +109,23 @@ namespace ScrumBoard
 
         public ITask GetTask(int priority)
         {
-            return _tasks.Find(element => element.Priority == priority) != null ? (Task)_tasks.Find(element => element.Priority == priority).Clone() : null;
+            return _tasks.Find(element => element.Priority == priority) != null
+                ? (Task)_tasks.Find(element => element.Priority == priority).Clone()
+                : null;
         }
 
         public ITask GetTask(string name)
         {
-            return _tasks.Find(element => element.Name == name) != null ? (Task)_tasks.Find(element => element.Name == name).Clone() : null;
+            return _tasks.Find(element => element.Name == name) != null
+                ? (Task)_tasks.Find(element => element.Name == name).Clone()
+                : null;
         }
 
         public ITask GetTask(ITask task)
         {
-            return _tasks.Find(element => element == task) != null ? (Task)_tasks.Find(element => element.Name == task.Name).Clone() : null;
+            return _tasks.Find(element => (element.Name == task.Name && element.Priority == task.Priority && element.Description == task.Description)) != null
+                ? (Task)_tasks.Find(element => element.Name == task.Name).Clone()
+                : null;
         }
 
         public void DeleteTask(ITask task)
