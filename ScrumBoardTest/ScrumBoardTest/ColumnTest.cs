@@ -186,5 +186,60 @@ namespace ScrumBoardTest
 
         }
 
+        [Fact]
+        public void Get_task_from_column_by_task_priority()
+        {
+            IColumn column = new Column("test name", 999999);
+            column.AddTask(new Task("test name", "test description", 9999999));
+            const int taskPriorityForGet_1 = 0;
+            const int taskPriorityForGet_2 = 2;
+
+            ITask taskGettedFromColumn_1 = column.GetTask(taskPriorityForGet_1);
+
+            Assert.NotNull(taskGettedFromColumn_1);
+            Assert.True(taskGettedFromColumn_1.Name == column.GetTaskList()[taskPriorityForGet_1].Name);
+            Assert.True(taskGettedFromColumn_1.Description == column.GetTaskList()[taskPriorityForGet_1].Description);
+            Assert.True(taskGettedFromColumn_1.Priority == column.GetTaskList()[taskPriorityForGet_1].Priority);
+
+            ITask taskGettedFromColumn_2 = column.GetTask(taskPriorityForGet_2);
+
+            Assert.True(taskGettedFromColumn_2 == null);
+        }
+
+        [Fact]
+        public void Get_task_from_column_by_task_name()
+        {
+            IColumn column = new Column("test name", 999999);
+            column.AddTask(new Task("test name", "test description", 9999999));
+            const string taskNameForGet_1 = "test name";
+            const string taskNameForGet_2 = "name out of list in column name";
+
+            ITask taskGettedFromColumn_1 = column.GetTask(taskNameForGet_1);
+
+            Assert.NotNull(taskGettedFromColumn_1);
+            
+            ITask taskGettedFromColumn_2 = column.GetTask(taskNameForGet_2);
+
+            Assert.True(taskGettedFromColumn_2 == null);
+        }
+
+        public void Get_task_from_column_by_task()
+        {
+            IColumn column = new Column("test name", 999999);
+            ITask task = new Task("test name", "test description", 9999999);
+            column.AddTask(task);
+            ITask taskForGet_1 = new Task("test name", "test description", 0);
+            ITask taskForGet_2 = (Task)task.Clone();
+            
+
+            ITask taskGettedFromColumn_1 = column.GetTask(taskForGet_1);
+
+            Assert.NotNull(taskGettedFromColumn_1);
+
+            ITask taskGettedFromColumn_2 = column.GetTask(taskForGet_2);
+
+            Assert.True(taskGettedFromColumn_2 == null);
+        }
+
     }
 }

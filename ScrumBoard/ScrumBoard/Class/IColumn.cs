@@ -18,7 +18,7 @@ namespace ScrumBoard
         List<ITask> GetTaskList();
         ITask GetTask(int priority);
         ITask GetTask(string name);
-        ITask GetTask(Task task);
+        ITask GetTask(ITask task);
         void DeleteTask(ITask task);
         void MoveTask(ITask taskToMove, int newPrior);
         object Clone();
