@@ -66,7 +66,6 @@ namespace ScrumBoardTest
 
             Assert.True(taskListFromColumn.Any() != false);
             Assert.True(taskListFromColumn.Count == 2);
-
             Assert.True(taskListFromColumn[0].Name == task_1.Name);
             Assert.True(taskListFromColumn[0].Description == task_1.Description);
             Assert.True(taskListFromColumn[0].Priority != task_1.Priority);
@@ -90,7 +89,6 @@ namespace ScrumBoardTest
 
             Assert.True(taskListFromColumn.Any() != false);
             Assert.True(taskListFromColumn.Count == 1);
-
             Assert.True(taskListFromColumn[0].Name == taskName);
             Assert.True(taskListFromColumn[0].Description == taskDescription);
             Assert.True(taskListFromColumn[0].Priority != taskPriority);
@@ -110,7 +108,6 @@ namespace ScrumBoardTest
 
             Assert.True(taskListFromColumn.Any() != false);
             Assert.True(taskListFromColumn.Count == 1);
-
             Assert.True(taskListFromColumn[0].Name == taskName);
             Assert.True(taskListFromColumn[0].Description == taskDescription);
             Assert.True(taskListFromColumn[0].Priority == taskPriorityWaited);
@@ -129,7 +126,6 @@ namespace ScrumBoardTest
 
             Assert.True(taskListFromColumn.Any() != false);
             Assert.True(taskListFromColumn.Count == 1);
-
             Assert.True(taskListFromColumn[0].Name == taskName);
             Assert.True(taskListFromColumn[0].Description == taskDescriptionWaited);
             Assert.True(taskListFromColumn[0].Priority == taskPriorityWaited);
@@ -148,7 +144,6 @@ namespace ScrumBoardTest
 
             Assert.True(taskListFromColumn.Any() != false);
             Assert.True(taskListFromColumn.Count == 1);
-
             Assert.True(taskListFromColumn[0].Name == taskNameWaited);
             Assert.True(taskListFromColumn[0].Description == taskDescriptionWaited);
             Assert.True(taskListFromColumn[0].Priority == taskPriorityWaited);
@@ -172,7 +167,7 @@ namespace ScrumBoardTest
         }
 
         [Fact]
-        public void Check_the_task_data_mutation_by_getted_column_list()
+        public void Check_the_task_data_mutation_by_getted_task_list()
         {
             IColumn column = new Column("test name", 999999);
             ITask task = new Task("test name", "test description", 999999);
@@ -200,14 +195,12 @@ namespace ScrumBoardTest
             const int taskPriorityForGet_2 = 2;
 
             ITask taskGettedFromColumn_1 = column.GetTask(taskPriorityForGet_1);
+            ITask taskGettedFromColumn_2 = column.GetTask(taskPriorityForGet_2);
 
             Assert.NotNull(taskGettedFromColumn_1);
             Assert.True(taskGettedFromColumn_1.Name == column.GetTaskList()[taskPriorityForGet_1].Name);
             Assert.True(taskGettedFromColumn_1.Description == column.GetTaskList()[taskPriorityForGet_1].Description);
             Assert.True(taskGettedFromColumn_1.Priority == column.GetTaskList()[taskPriorityForGet_1].Priority);
-
-            ITask taskGettedFromColumn_2 = column.GetTask(taskPriorityForGet_2);
-
             Assert.True(taskGettedFromColumn_2 == null);
         }
 
@@ -220,11 +213,9 @@ namespace ScrumBoardTest
             const string taskNameForGet_2 = "name out of list in column name";
 
             ITask taskGettedFromColumn_1 = column.GetTask(taskNameForGet_1);
-
-            Assert.NotNull(taskGettedFromColumn_1);
-            
             ITask taskGettedFromColumn_2 = column.GetTask(taskNameForGet_2);
 
+            Assert.NotNull(taskGettedFromColumn_1);
             Assert.True(taskGettedFromColumn_2 == null);
         }
 
@@ -239,12 +230,11 @@ namespace ScrumBoardTest
             ITask taskForGet_3 = new Task("test name 1", "test description", 0);
 
             ITask taskGettedFromColumn_1 = column.GetTask(taskForGet_1);
-            Assert.NotNull(taskGettedFromColumn_1);
-
             ITask taskGettedFromColumn_2 = column.GetTask(taskForGet_2);
-            Assert.NotNull(taskGettedFromColumn_2);
-
             ITask taskGettedFromColumn_3 = column.GetTask(taskForGet_3);
+
+            Assert.NotNull(taskGettedFromColumn_1);
+            Assert.NotNull(taskGettedFromColumn_2);
             Assert.True(taskGettedFromColumn_3 == null);
         }
 
@@ -292,14 +282,13 @@ namespace ScrumBoardTest
 
             Assert.True(taskListFromColumn.Any() != false);
             Assert.True(taskListFromColumn.Count == 3);
-
             Assert.True(column.GetTask(task_1.Name).Priority == 1);
             Assert.True(column.GetTask(task_2.Name).Priority == 2);
             Assert.True(column.GetTask(task_3.Name).Priority == 0);
         }
 
         [Fact]
-        public void Delete_task_from_column()
+        public void Delete_one_of_task_from_column()
         {
             ITask task_1 = new Task("test name 1", "test description", 0);
             ITask task_2 = new Task("test name 2", "test description", 2);
@@ -314,7 +303,6 @@ namespace ScrumBoardTest
 
             Assert.True(taskListFromColumn.Any() != false);
             Assert.True(taskListFromColumn.Count == 2);
-
             Assert.True(column.GetTask(task_1.Name) == null);
             Assert.True(column.GetTask(task_2.Name).Priority == 1);
             Assert.True(column.GetTask(task_3.Name).Priority == 0);
@@ -325,7 +313,6 @@ namespace ScrumBoardTest
 
             Assert.True(taskListFromColumn.Any() != false);
             Assert.True(taskListFromColumn.Count == 2);
-
             Assert.True(column.GetTask(task_1.Name) == null);
             Assert.True(column.GetTask(task_2.Name).Priority == 1);
             Assert.True(column.GetTask(task_3.Name).Priority == 0);
@@ -347,7 +334,6 @@ namespace ScrumBoardTest
 
             Assert.True(taskListFromColumn.Any() != false);
             Assert.True(taskListFromColumn.Count == 3);
-
             Assert.True(column.GetTask(task_1.Name).Priority == 2);
             Assert.True(column.GetTask(task_2.Name).Priority == 1);
             Assert.True(column.GetTask(task_3.Name).Priority == 0);
